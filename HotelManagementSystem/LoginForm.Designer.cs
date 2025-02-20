@@ -41,7 +41,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            label1.ForeColor = Color.FromArgb(44, 62, 80);
+            label1.ForeColor = Color.FromArgb(82, 102, 93);
             label1.Location = new Point(131, 48);
             label1.Name = "label1";
             label1.Size = new Size(527, 37);
@@ -52,7 +52,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            label2.ForeColor = Color.FromArgb(44, 62, 80);
+            label2.ForeColor = Color.FromArgb(84, 101, 93);
             label2.Location = new Point(24, 136);
             label2.Name = "label2";
             label2.Size = new Size(146, 37);
@@ -63,7 +63,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            label3.ForeColor = Color.FromArgb(44, 62, 80);
+            label3.ForeColor = Color.FromArgb(84, 101, 93);
             label3.Location = new Point(31, 239);
             label3.Name = "label3";
             label3.Size = new Size(139, 37);
@@ -72,6 +72,7 @@
             // 
             // textBox1
             // 
+            textBox1.BackColor = Color.FromArgb(242, 242, 242);
             textBox1.BorderStyle = BorderStyle.FixedSingle;
             textBox1.Font = new Font("Segoe UI", 12F);
             textBox1.ForeColor = Color.Black;
@@ -82,6 +83,7 @@
             // 
             // textBox2
             // 
+            textBox2.BackColor = Color.FromArgb(242, 242, 242);
             textBox2.BorderStyle = BorderStyle.FixedSingle;
             textBox2.Font = new Font("Segoe UI", 12F);
             textBox2.Location = new Point(200, 239);
@@ -91,9 +93,10 @@
             // 
             // button1
             // 
-            button1.BackColor = Color.FromArgb(44, 62, 80);
+            button1.BackColor = Color.FromArgb(82, 102, 93);
             button1.FlatStyle = FlatStyle.Flat;
-            button1.ForeColor = Color.White;
+            button1.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button1.ForeColor = Color.FromArgb(242, 242, 242);
             button1.Location = new Point(282, 334);
             button1.Name = "button1";
             button1.Size = new Size(191, 55);
@@ -108,7 +111,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(236, 240, 241);
+            BackColor = Color.White;
             ClientSize = new Size(800, 450);
             Controls.Add(button1);
             Controls.Add(textBox2);

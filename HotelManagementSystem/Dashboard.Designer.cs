@@ -41,7 +41,8 @@
             // 
             // panelSidebar
             // 
-            panelSidebar.BackColor = Color.FromArgb(44, 62, 80);
+            panelSidebar.BackColor = Color.FromArgb(84, 101, 93);
+            panelSidebar.BorderStyle = BorderStyle.Fixed3D;
             panelSidebar.Controls.Add(btnLogout);
             panelSidebar.Controls.Add(btnReservations);
             panelSidebar.Controls.Add(btnRooms);
@@ -50,79 +51,87 @@
             panelSidebar.Dock = DockStyle.Left;
             panelSidebar.Location = new Point(0, 0);
             panelSidebar.Name = "panelSidebar";
-            panelSidebar.Size = new Size(200, 585);
+            panelSidebar.Size = new Size(215, 585);
             panelSidebar.TabIndex = 0;
             panelSidebar.Paint += panel1_Paint;
             // 
             // btnLogout
             // 
-            btnLogout.FlatStyle = FlatStyle.Flat;
-            btnLogout.ForeColor = Color.White;
-            btnLogout.Location = new Point(10, 435);
+            btnLogout.BackColor = Color.FromArgb(242, 242, 242);
+            btnLogout.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnLogout.ForeColor = Color.FromArgb(84, 101, 93);
+            btnLogout.Location = new Point(12, 428);
             btnLogout.Name = "btnLogout";
             btnLogout.Size = new Size(180, 50);
             btnLogout.TabIndex = 8;
             btnLogout.Text = "Logout";
-            btnLogout.UseVisualStyleBackColor = true;
+            btnLogout.UseVisualStyleBackColor = false;
             btnLogout.Click += btnLogout_Click;
             // 
             // btnReservations
             // 
-            btnReservations.FlatStyle = FlatStyle.Flat;
-            btnReservations.ForeColor = Color.White;
-            btnReservations.Location = new Point(12, 333);
+            btnReservations.BackColor = Color.FromArgb(242, 242, 242);
+            btnReservations.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnReservations.ForeColor = Color.FromArgb(84, 101, 93);
+            btnReservations.Location = new Point(12, 336);
             btnReservations.Name = "btnReservations";
             btnReservations.Size = new Size(180, 50);
             btnReservations.TabIndex = 7;
             btnReservations.Text = "Reservations";
-            btnReservations.UseVisualStyleBackColor = true;
+            btnReservations.UseVisualStyleBackColor = false;
             btnReservations.Click += btnReservations_Click;
             // 
             // btnRooms
             // 
-            btnRooms.FlatStyle = FlatStyle.Flat;
-            btnRooms.ForeColor = Color.White;
+            btnRooms.BackColor = Color.FromArgb(242, 242, 242);
+            btnRooms.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnRooms.ForeColor = Color.FromArgb(84, 101, 93);
             btnRooms.Location = new Point(12, 239);
             btnRooms.Name = "btnRooms";
-            btnRooms.Size = new Size(180, 50);
+            btnRooms.Size = new Size(180, 62);
             btnRooms.TabIndex = 6;
             btnRooms.Text = "Room Management";
-            btnRooms.UseVisualStyleBackColor = true;
+            btnRooms.UseVisualStyleBackColor = false;
             btnRooms.Click += btnRooms_Click;
             // 
             // btnEmployee
             // 
-            btnEmployee.FlatStyle = FlatStyle.Flat;
-            btnEmployee.ForeColor = Color.White;
+            btnEmployee.BackColor = Color.FromArgb(242, 242, 242);
+            btnEmployee.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnEmployee.ForeColor = Color.FromArgb(84, 101, 93);
             btnEmployee.Location = new Point(12, 135);
             btnEmployee.Name = "btnEmployee";
-            btnEmployee.Size = new Size(180, 50);
+            btnEmployee.Size = new Size(180, 65);
             btnEmployee.TabIndex = 5;
             btnEmployee.Text = "Employee Management\t";
-            btnEmployee.UseVisualStyleBackColor = true;
+            btnEmployee.UseVisualStyleBackColor = false;
             btnEmployee.Click += btnEmployee_Click;
             // 
             // btnDashboard
             // 
-            btnDashboard.FlatStyle = FlatStyle.Flat;
-            btnDashboard.ForeColor = Color.White;
+            btnDashboard.BackColor = Color.FromArgb(242, 242, 242);
+            btnDashboard.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnDashboard.ForeColor = Color.FromArgb(84, 101, 93);
             btnDashboard.Location = new Point(12, 41);
             btnDashboard.Name = "btnDashboard";
-            btnDashboard.Size = new Size(180, 50);
+            btnDashboard.Size = new Size(180, 58);
             btnDashboard.TabIndex = 0;
             btnDashboard.Text = "Dashboard";
-            btnDashboard.UseVisualStyleBackColor = true;
+            btnDashboard.UseVisualStyleBackColor = false;
             btnDashboard.Click += btnDashboard_Click;
             btnDashboard.MouseLeave += btnDashboard_MouseLeave;
             btnDashboard.MouseHover += btnDashboard_MouseHover;
             // 
             // panelMainContent
             // 
-            panelMainContent.BackColor = Color.FromArgb(236, 240, 241);
+            panelMainContent.BackColor = Color.WhiteSmoke;
+            panelMainContent.BackgroundImage = (Image)resources.GetObject("panelMainContent.BackgroundImage");
+            panelMainContent.BackgroundImageLayout = ImageLayout.Stretch;
+            panelMainContent.BorderStyle = BorderStyle.Fixed3D;
             panelMainContent.Dock = DockStyle.Fill;
-            panelMainContent.Location = new Point(200, 0);
+            panelMainContent.Location = new Point(215, 0);
             panelMainContent.Name = "panelMainContent";
-            panelMainContent.Size = new Size(762, 585);
+            panelMainContent.Size = new Size(747, 585);
             panelMainContent.TabIndex = 1;
             panelMainContent.Paint += panel2_Paint;
             // 
@@ -130,6 +139,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.ActiveCaption;
             ClientSize = new Size(962, 585);
             Controls.Add(panelMainContent);
             Controls.Add(panelSidebar);

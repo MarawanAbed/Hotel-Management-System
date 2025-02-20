@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250219003451_test")]
-    partial class test
+    [Migration("20250220144224_initdb")]
+    partial class initdb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,29 @@ namespace HotelManagementSystem.Migrations
                     b.HasKey("EmployeeID");
 
                     b.ToTable("Employees");
+
+                    b.HasData(
+                        new
+                        {
+                            EmployeeID = 1,
+                            Name = "John Doe",
+                            Position = "Manager",
+                            Salary = 5000m
+                        },
+                        new
+                        {
+                            EmployeeID = 2,
+                            Name = "Jane Smith",
+                            Position = "Receptionist",
+                            Salary = 3000m
+                        },
+                        new
+                        {
+                            EmployeeID = 3,
+                            Name = "Mike Johnson",
+                            Position = "Housekeeping",
+                            Salary = 2500m
+                        });
                 });
 
             modelBuilder.Entity("HotelManagementSystem.database.Reservation", b =>
@@ -70,15 +93,61 @@ namespace HotelManagementSystem.Migrations
                     b.Property<int>("RoomID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("ReservationID");
 
                     b.HasIndex("RoomID");
 
                     b.ToTable("Reservations");
+
+                    b.HasData(
+                        new
+                        {
+                            ReservationID = 1,
+                            CheckInDate = new DateTime(2025, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2025, 2, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CustomerName = "Alice Johnson",
+                            RoomID = 2,
+                            Status = 0
+                        },
+                        new
+                        {
+                            ReservationID = 2,
+                            CheckInDate = new DateTime(2025, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2025, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CustomerName = "Bob Williams",
+                            RoomID = 1,
+                            Status = 1
+                        },
+                        new
+                        {
+                            ReservationID = 3,
+                            CheckInDate = new DateTime(2025, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2025, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CustomerName = "Charlie Brown",
+                            RoomID = 3,
+                            Status = 2
+                        },
+                        new
+                        {
+                            ReservationID = 4,
+                            CheckInDate = new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2025, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CustomerName = "David White",
+                            RoomID = 4,
+                            Status = 3
+                        },
+                        new
+                        {
+                            ReservationID = 5,
+                            CheckInDate = new DateTime(2025, 2, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CheckOutDate = new DateTime(2025, 2, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CustomerName = "Eva Green",
+                            RoomID = 1,
+                            Status = 4
+                        });
                 });
 
             modelBuilder.Entity("HotelManagementSystem.database.Room", b =>
@@ -106,6 +175,40 @@ namespace HotelManagementSystem.Migrations
                     b.HasKey("RoomID");
 
                     b.ToTable("Rooms");
+
+                    b.HasData(
+                        new
+                        {
+                            RoomID = 1,
+                            Availability = true,
+                            Price = 50m,
+                            RoomNumber = "101",
+                            Type = "Single"
+                        },
+                        new
+                        {
+                            RoomID = 2,
+                            Availability = false,
+                            Price = 80m,
+                            RoomNumber = "102",
+                            Type = "Double"
+                        },
+                        new
+                        {
+                            RoomID = 3,
+                            Availability = true,
+                            Price = 150m,
+                            RoomNumber = "103",
+                            Type = "Suite"
+                        },
+                        new
+                        {
+                            RoomID = 4,
+                            Availability = true,
+                            Price = 55m,
+                            RoomNumber = "104",
+                            Type = "Single"
+                        });
                 });
 
             modelBuilder.Entity("HotelManagementSystem.database.User", b =>
@@ -127,6 +230,14 @@ namespace HotelManagementSystem.Migrations
                     b.HasKey("UserID");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserID = 1,
+                            PasswordHash = "JAvlGPq9JyTdtvBO6x2llnRI1+gxwIyPqCKAn3THIKk=",
+                            Username = "admin"
+                        });
                 });
 
             modelBuilder.Entity("HotelManagementSystem.database.Reservation", b =>

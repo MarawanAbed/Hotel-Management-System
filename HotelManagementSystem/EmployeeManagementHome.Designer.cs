@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             panel1 = new Panel();
             dataGridView1 = new DataGridView();
             groupBox1 = new GroupBox();
@@ -60,8 +60,8 @@
             // 
             // dataGridView1
             // 
-            dataGridViewCellStyle1.BackColor = Color.WhiteSmoke;
-            dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.BackColor = Color.WhiteSmoke;
+            dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.BackgroundColor = Color.White;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -78,6 +78,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.BackColor = Color.White;
             groupBox1.Controls.Add(button6);
             groupBox1.Controls.Add(button4);
             groupBox1.Controls.Add(button3);
@@ -90,6 +91,8 @@
             groupBox1.Controls.Add(textBox1);
             groupBox1.Controls.Add(label1);
             groupBox1.Dock = DockStyle.Top;
+            groupBox1.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox1.ForeColor = Color.FromArgb(82, 102, 93);
             groupBox1.Location = new Point(0, 0);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(994, 299);
@@ -100,10 +103,10 @@
             // 
             // button6
             // 
-            button6.BackColor = SystemColors.MenuHighlight;
+            button6.BackColor = Color.FromArgb(82, 102, 93);
             button6.FlatStyle = FlatStyle.Flat;
-            button6.ForeColor = SystemColors.Control;
-            button6.Location = new Point(425, 233);
+            button6.ForeColor = Color.FromArgb(242, 242, 242);
+            button6.Location = new Point(751, 78);
             button6.Name = "button6";
             button6.Size = new Size(180, 50);
             button6.TabIndex = 11;
@@ -113,12 +116,12 @@
             // 
             // button4
             // 
-            button4.BackColor = Color.FromArgb(39, 174, 96);
+            button4.BackColor = Color.FromArgb(82, 102, 93);
             button4.FlatStyle = FlatStyle.Flat;
-            button4.ForeColor = Color.White;
-            button4.Location = new Point(30, 160);
+            button4.ForeColor = Color.FromArgb(242, 242, 242);
+            button4.Location = new Point(751, 239);
             button4.Name = "button4";
-            button4.Size = new Size(180, 50);
+            button4.Size = new Size(180, 51);
             button4.TabIndex = 9;
             button4.Text = "Add Employee";
             button4.UseVisualStyleBackColor = false;
@@ -126,10 +129,10 @@
             // 
             // button3
             // 
-            button3.BackColor = Color.FromArgb(231, 76, 60);
+            button3.BackColor = Color.FromArgb(82, 102, 93);
             button3.FlatStyle = FlatStyle.Flat;
-            button3.ForeColor = SystemColors.ControlLightLight;
-            button3.Location = new Point(519, 160);
+            button3.ForeColor = Color.FromArgb(242, 242, 242);
+            button3.Location = new Point(751, 132);
             button3.Name = "button3";
             button3.Size = new Size(180, 50);
             button3.TabIndex = 8;
@@ -139,10 +142,10 @@
             // 
             // button2
             // 
-            button2.BackColor = Color.FromArgb(52, 152, 219);
+            button2.BackColor = Color.FromArgb(82, 102, 93);
             button2.FlatStyle = FlatStyle.Flat;
-            button2.ForeColor = SystemColors.Control;
-            button2.Location = new Point(272, 160);
+            button2.ForeColor = Color.FromArgb(242, 242, 242);
+            button2.Location = new Point(751, 22);
             button2.Name = "button2";
             button2.Size = new Size(180, 50);
             button2.TabIndex = 7;
@@ -152,44 +155,50 @@
             // 
             // textBox3
             // 
-            textBox3.Location = new Point(93, 98);
+            textBox3.BackColor = Color.FromArgb(242, 242, 242);
+            textBox3.Location = new Point(233, 143);
             textBox3.Name = "textBox3";
-            textBox3.Size = new Size(268, 27);
+            textBox3.Size = new Size(268, 38);
             textBox3.TabIndex = 6;
             textBox3.TextChanged += textBox3_TextChanged;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(15, 105);
+            label3.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
+            label3.ForeColor = Color.FromArgb(84, 101, 93);
+            label3.Location = new Point(159, 143);
             label3.Name = "label3";
-            label3.Size = new Size(49, 20);
+            label3.Size = new Size(60, 23);
             label3.TabIndex = 5;
             label3.Text = "Salary";
             // 
             // textBox2
             // 
-            textBox2.Location = new Point(458, 40);
+            textBox2.BackColor = Color.FromArgb(242, 242, 242);
+            textBox2.Location = new Point(233, 222);
             textBox2.Name = "textBox2";
-            textBox2.Size = new Size(268, 27);
+            textBox2.Size = new Size(268, 38);
             textBox2.TabIndex = 4;
             textBox2.TextChanged += textBox2_TextChanged;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(391, 40);
+            label2.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.ForeColor = Color.FromArgb(84, 101, 93);
+            label2.Location = new Point(159, 222);
             label2.Name = "label2";
-            label2.Size = new Size(61, 20);
+            label2.Size = new Size(73, 23);
             label2.TabIndex = 3;
             label2.Text = "Position";
             // 
             // button1
             // 
-            button1.BackColor = SystemColors.HotTrack;
+            button1.BackColor = Color.FromArgb(82, 102, 93);
             button1.FlatStyle = FlatStyle.Flat;
-            button1.ForeColor = SystemColors.Control;
-            button1.Location = new Point(168, 233);
+            button1.ForeColor = Color.FromArgb(242, 242, 242);
+            button1.Location = new Point(751, 185);
             button1.Name = "button1";
             button1.Size = new Size(180, 50);
             button1.TabIndex = 2;
@@ -199,18 +208,21 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(93, 40);
+            textBox1.BackColor = Color.FromArgb(242, 242, 242);
+            textBox1.Location = new Point(233, 64);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(268, 27);
+            textBox1.Size = new Size(268, 38);
             textBox1.TabIndex = 1;
             textBox1.TextChanged += textBox1_TextChanged;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(15, 43);
+            label1.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
+            label1.ForeColor = Color.FromArgb(84, 101, 93);
+            label1.Location = new Point(162, 70);
             label1.Name = "label1";
-            label1.Size = new Size(49, 20);
+            label1.Size = new Size(57, 23);
             label1.TabIndex = 0;
             label1.Text = "Name";
             // 
