@@ -17,7 +17,7 @@ namespace HotelManagementSystem.database
         public DbSet<Reservation> Reservations { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=.;Database=Hotel;Trusted_Connection=True;MultipleActiveResultSets=true;trustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-30D9VAR;Database=hoteltest3;Trusted_Connection=True;MultipleActiveResultSets=true;trustServerCertificate=true");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

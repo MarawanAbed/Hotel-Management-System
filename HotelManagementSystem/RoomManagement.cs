@@ -256,5 +256,15 @@ namespace HotelManagementSystem
         private void RoomManagement_Load(object sender, EventArgs e)
         {
         }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

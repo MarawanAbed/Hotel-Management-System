@@ -37,68 +37,70 @@
             dataGridViewRecentReservations = new DataGridView();
             panel1 = new Panel();
             ((System.ComponentModel.ISupportInitialize)dataGridViewRecentReservations).BeginInit();
-            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // lblTotalEmployees
             // 
             lblTotalEmployees.AutoSize = true;
-            lblTotalEmployees.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            lblTotalEmployees.ForeColor = Color.FromArgb(44, 62, 80);
+            lblTotalEmployees.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblTotalEmployees.ForeColor = Color.FromArgb(84, 101, 93);
             lblTotalEmployees.Location = new Point(33, 34);
             lblTotalEmployees.Name = "lblTotalEmployees";
-            lblTotalEmployees.Size = new Size(227, 37);
+            lblTotalEmployees.Size = new Size(166, 28);
             lblTotalEmployees.TabIndex = 2;
             lblTotalEmployees.Text = "Total Employees";
             // 
             // lblAvailableRooms
             // 
             lblAvailableRooms.AutoSize = true;
-            lblAvailableRooms.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            lblAvailableRooms.ForeColor = Color.FromArgb(44, 62, 80);
-            lblAvailableRooms.Location = new Point(33, 102);
+            lblAvailableRooms.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblAvailableRooms.ForeColor = Color.FromArgb(84, 101, 93);
+            lblAvailableRooms.Location = new Point(33, 111);
             lblAvailableRooms.Name = "lblAvailableRooms";
-            lblAvailableRooms.Size = new Size(231, 37);
+            lblAvailableRooms.Size = new Size(170, 28);
             lblAvailableRooms.TabIndex = 3;
             lblAvailableRooms.Text = "Available Rooms";
+            lblAvailableRooms.Click += lblAvailableRooms_Click;
             // 
             // lblOccupiedRooms
             // 
             lblOccupiedRooms.AutoSize = true;
-            lblOccupiedRooms.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            lblOccupiedRooms.ForeColor = Color.FromArgb(44, 62, 80);
-            lblOccupiedRooms.Location = new Point(348, 102);
+            lblOccupiedRooms.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblOccupiedRooms.ForeColor = Color.FromArgb(84, 101, 93);
+            lblOccupiedRooms.Location = new Point(33, 149);
             lblOccupiedRooms.Name = "lblOccupiedRooms";
-            lblOccupiedRooms.Size = new Size(231, 37);
+            lblOccupiedRooms.Size = new Size(170, 28);
             lblOccupiedRooms.TabIndex = 4;
             lblOccupiedRooms.Text = "Occupied Rooms";
             // 
             // lblUpcomingReservations
             // 
             lblUpcomingReservations.AutoSize = true;
-            lblUpcomingReservations.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            lblUpcomingReservations.ForeColor = Color.FromArgb(44, 62, 80);
-            lblUpcomingReservations.Location = new Point(348, 34);
+            lblUpcomingReservations.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblUpcomingReservations.ForeColor = Color.FromArgb(84, 101, 93);
+            lblUpcomingReservations.Location = new Point(33, 71);
             lblUpcomingReservations.Name = "lblUpcomingReservations";
-            lblUpcomingReservations.Size = new Size(322, 37);
+            lblUpcomingReservations.Size = new Size(236, 28);
             lblUpcomingReservations.TabIndex = 5;
             lblUpcomingReservations.Text = "Upcoming Reservations";
+            lblUpcomingReservations.Click += lblUpcomingReservations_Click;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            label1.ForeColor = Color.FromArgb(44, 62, 80);
-            label1.Location = new Point(246, 0);
+            label1.ForeColor = Color.FromArgb(84, 101, 93);
+            label1.Location = new Point(254, 212);
             label1.Name = "label1";
             label1.Size = new Size(276, 37);
             label1.TabIndex = 6;
             label1.Text = "Recent Reservations\t";
+            label1.Click += label1_Click;
             // 
             // dataGridViewRecentReservations
             // 
             dataGridViewRecentReservations.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewRecentReservations.BackgroundColor = Color.White;
+            dataGridViewRecentReservations.BackgroundColor = Color.FromArgb(242, 242, 242);
             dataGridViewRecentReservations.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = Color.WhiteSmoke;
@@ -119,7 +121,6 @@
             // 
             // panel1
             // 
-            panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Bottom;
             panel1.Location = new Point(0, 237);
             panel1.Name = "panel1";
@@ -130,7 +131,9 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(242, 242, 242);
             ClientSize = new Size(800, 450);
+            Controls.Add(label1);
             Controls.Add(panel1);
             Controls.Add(dataGridViewRecentReservations);
             Controls.Add(lblUpcomingReservations);
@@ -141,8 +144,6 @@
             Text = "DashboardHomeForm";
             Load += DashboardHomeForm_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridViewRecentReservations).EndInit();
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
