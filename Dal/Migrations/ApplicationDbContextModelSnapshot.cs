@@ -4,19 +4,16 @@ using HotelManagementSystem.database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace HotelManagementSystem.Migrations
+namespace Dal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250220183825_test")]
-    partial class test
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +22,7 @@ namespace HotelManagementSystem.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("HotelManagementSystem.database.Employee", b =>
+            modelBuilder.Entity("Dal.Entities.Employee", b =>
                 {
                     b.Property<int>("EmployeeID")
                         .ValueGeneratedOnAdd()
@@ -72,7 +69,7 @@ namespace HotelManagementSystem.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HotelManagementSystem.database.Reservation", b =>
+            modelBuilder.Entity("Dal.Entities.Reservation", b =>
                 {
                     b.Property<int>("ReservationID")
                         .ValueGeneratedOnAdd()
@@ -150,7 +147,7 @@ namespace HotelManagementSystem.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HotelManagementSystem.database.Room", b =>
+            modelBuilder.Entity("Dal.Entities.Room", b =>
                 {
                     b.Property<int>("RoomID")
                         .ValueGeneratedOnAdd()
@@ -211,7 +208,7 @@ namespace HotelManagementSystem.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HotelManagementSystem.database.User", b =>
+            modelBuilder.Entity("Dal.Entities.User", b =>
                 {
                     b.Property<int>("UserID")
                         .ValueGeneratedOnAdd()
@@ -240,9 +237,9 @@ namespace HotelManagementSystem.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HotelManagementSystem.database.Reservation", b =>
+            modelBuilder.Entity("Dal.Entities.Reservation", b =>
                 {
-                    b.HasOne("HotelManagementSystem.database.Room", "Room")
+                    b.HasOne("Dal.Entities.Room", "Room")
                         .WithMany("Reservations")
                         .HasForeignKey("RoomID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -251,7 +248,7 @@ namespace HotelManagementSystem.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("HotelManagementSystem.database.Room", b =>
+            modelBuilder.Entity("Dal.Entities.Room", b =>
                 {
                     b.Navigation("Reservations");
                 });

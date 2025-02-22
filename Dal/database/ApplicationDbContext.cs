@@ -1,11 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic.ApplicationServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Dal.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace HotelManagementSystem.database
 {
@@ -17,7 +14,7 @@ namespace HotelManagementSystem.database
         public DbSet<Reservation> Reservations { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=DESKTOP-30D9VAR;Database=hoteltest3;Trusted_Connection=True;MultipleActiveResultSets=true;trustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Server=.;Database=hoteltest4;Trusted_Connection=True;MultipleActiveResultSets=true;trustServerCertificate=true");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -61,51 +58,5 @@ namespace HotelManagementSystem.database
                 return Convert.ToBase64String(hash);
             }
         }
-    }
-
-
-    public class User
-    {
-        public int UserID { get; set; }
-        public string Username { get; set; }
-        public string PasswordHash { get; set; }
-    }
-    public class Employee
-    {
-        public int EmployeeID { get; set; }
-        public string Name { get; set; }
-        public string Position { get; set; }
-        public decimal Salary { get; set; }
-    }
-
-    public class Room
-    {
-        public int RoomID { get; set; }
-        public string RoomNumber { get; set; }
-        public string Type { get; set; }
-        public decimal Price { get; set; }
-        public bool Availability { get; set; } = true;
-
-        public ICollection<Reservation> Reservations { get; set; }
-    }
-    public enum ReservationStatus
-    {
-        Upcoming,  
-        Ongoing,   
-        CheckedOut,
-        Canceled,  
-        NoShow     
-    }
-
-    public class Reservation
-    {
-        public int ReservationID { get; set; }
-        public string CustomerName { get; set; }
-        public DateTime CheckInDate { get; set; }
-        public DateTime CheckOutDate { get; set; }
-        public ReservationStatus Status { get; set; } 
-
-        public int RoomID { get; set; }
-        public Room Room { get; set; }
     }
 }

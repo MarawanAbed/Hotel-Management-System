@@ -1,4 +1,7 @@
-﻿using HotelManagementSystem.database;
+﻿using BL.Services.Abstraction;
+using BL.Services.Implementation;
+using Dal.Repo.Implementation;
+using HotelManagementSystem.database;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,9 +16,13 @@ namespace HotelManagementSystem
 {
     public partial class DashboardHomeForm : Form
     {
+        private readonly IDashBoardServices _dashBoard;
         public DashboardHomeForm()
         {
             InitializeComponent();
+            var context=new ApplicationDbContext();
+            var dashBoardRepo= new DashBoardRepo(context);
+            _dashBoard = new DashBoardServices(dashBoardRepo);
         }
 
         private void DashboardHomeForm_Load(object sender, EventArgs e)
@@ -25,20 +32,17 @@ namespace HotelManagementSystem
         }
         private void LoadDashboardData()
         {
-            using (var db = new ApplicationDbContext()) // Connect to DB
-            {
-                lblTotalEmployees.Text = "Total Employees: " + db.Employees.Count().ToString();
+            
+            
+                lblTotalEmployees.Text = "Total Employees: " + _dashBoard.GetTotalEmployees().ToString();
 
-                lblAvailableRooms.Text = "Available Rooms: " + db.Rooms.Count(r => r.Availability).ToString();
+            lblAvailableRooms.Text = "Available Rooms: " + _dashBoard.GetAvailableRooms().ToString();
 
-                lblOccupiedRooms.Text = "Occupied Rooms: " + db.Rooms.Count(r => !r.Availability).ToString();
+            lblOccupiedRooms.Text = "Occupied Rooms: " + _dashBoard.GetOccupiedRooms().ToString();
 
-                lblUpcomingReservations.Text = "Upcoming Reservations: " + db.Reservations.Count(r => r.CheckInDate > DateTime.Now).ToString();
+            lblUpcomingReservations.Text = "Upcoming Reservations: " + _dashBoard.GetUpcomingReservations().ToString();
 
-                dataGridViewRecentReservations.DataSource = db.Reservations
-    .Select(r => new { r.CustomerName, r.CheckInDate, r.CheckOutDate, r.Status })
-    .ToList();
-            }
+            dataGridViewRecentReservations.DataSource = _dashBoard.GetRecentReservations();
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)

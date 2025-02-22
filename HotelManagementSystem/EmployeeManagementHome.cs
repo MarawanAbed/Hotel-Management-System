@@ -1,4 +1,9 @@
-﻿using HotelManagementSystem.database;
+﻿using BL.Services.Abstraction;
+using BL.Services.Implementation;
+using Dal.Entities;
+using Dal.Repo.Abstraction;
+using Dal.Repo.Implementation;
+using HotelManagementSystem.database;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -15,18 +20,20 @@ namespace HotelManagementSystem
 {
     public partial class EmployeeManagementHome : Form
     {
-        private readonly ApplicationDbContext _context;
 
+        private readonly IEmpolyeeServices _empolyeeServices;
         public EmployeeManagementHome()
         {
             InitializeComponent();
-            _context = new ApplicationDbContext();
+            var context = new ApplicationDbContext();
+            var empolyeeRepo = new EmpolyeeRepo(context);
+            _empolyeeServices = new EmpolyeeServices(empolyeeRepo);
             LoadEmployees();
 
         }
         private void LoadEmployees()
         {
-            dataGridView1.DataSource = _context.Employees.ToList();
+            dataGridView1.DataSource = _empolyeeServices.GetAllEmpolyees();
         }
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -47,8 +54,7 @@ namespace HotelManagementSystem
                 Salary = decimal.Parse(textBox3.Text)
             };
 
-            _context.Employees.Add(employee);
-            _context.SaveChanges();
+            _empolyeeServices.AddEmployee(employee);
             textBox1.Text = "";
             textBox2.Text = "";
             textBox3.Text = "";
@@ -60,19 +66,20 @@ namespace HotelManagementSystem
             if (dataGridView1.SelectedRows.Count > 0)
             {
                 int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value);
-                var employee = _context.Employees.Find(id);
-                if (employee != null)
+                Employee employee = new Employee
                 {
-                    employee.Name = textBox1.Text;
-                    employee.Position = textBox2.Text;
-                    employee.Salary = decimal.Parse(textBox3.Text);
+                    EmployeeID = id,
+                    Name = textBox1.Text,
+                    Position = textBox2.Text,
+                    Salary = decimal.Parse(textBox3.Text)
+                };
+                _empolyeeServices.UpdateEmployee(employee);
 
-                    _context.SaveChanges();
                     textBox1.Text = "";
                     textBox2.Text = "";
                     textBox3.Text = "";
                     LoadEmployees();
-                }
+                
             }
         }
 
@@ -81,99 +88,95 @@ namespace HotelManagementSystem
             if (dataGridView1.SelectedRows.Count > 0)
             {
                 int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value);
-                var employee = _context.Employees.Find(id);
-                if (employee != null)
-                {
-                    _context.Employees.Remove(employee);
-                    _context.SaveChanges();
-                    textBox1.Text = "";
+
+                _empolyeeServices.DeleteEmployee(id);
+                textBox1.Text = "";
                     textBox2.Text = "";
                     textBox3.Text = "";
                     LoadEmployees();
-                }
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Filter = "Excel Files|*.xlsx;*.xls"
-            };
+            //OpenFileDialog openFileDialog = new OpenFileDialog
+            //{
+            //    Filter = "Excel Files|*.xlsx;*.xls"
+            //};
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string filePath = openFileDialog.FileName;
+            //if (openFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    string filePath = openFileDialog.FileName;
 
-                using (var package = new ExcelPackage(new FileInfo(filePath)))
-                {
-                    ExcelWorksheet worksheet = FindEmployeeSheet(package);
+            //    using (var package = new ExcelPackage(new FileInfo(filePath)))
+            //    {
+            //        ExcelWorksheet worksheet = FindEmployeeSheet(package);
 
-                    if (worksheet == null)
-                    {
-                        MessageBox.Show("No valid Employee sheet found!");
-                        return;
-                    }
+            //        if (worksheet == null)
+            //        {
+            //            MessageBox.Show("No valid Employee sheet found!");
+            //            return;
+            //        }
 
-                    List<Employee> employees = ReadEmployeeSheet(worksheet);
+            //        List<Employee> employees = ReadEmployeeSheet(worksheet);
 
-                    if (employees.Count > 0)
-                    {
-                        _context.Employees.AddRange(employees);
-                        _context.SaveChanges();
-                        LoadEmployees();
-                        MessageBox.Show("Import successful! Employees saved to the database.");
-                    }
-                }
-            }
+            //        if (employees.Count > 0)
+            //        {
+            //            _context.Employees.AddRange(employees);
+            //            _context.SaveChanges();
+            //            LoadEmployees();
+            //            MessageBox.Show("Import successful! Employees saved to the database.");
+            //        }
+            //    }
+            //}
         }
 
 
 
         private void button6_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
-            {
-                Filter = "Excel Files|*.xlsx",
-                FileName = "Employees.xlsx"
-            };
+            //SaveFileDialog saveFileDialog = new SaveFileDialog
+            //{
+            //    Filter = "Excel Files|*.xlsx",
+            //    FileName = "Employees.xlsx"
+            //};
 
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    using (ExcelPackage package = new ExcelPackage())
-                    {
-                        ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Employees");
+            //if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    try
+            //    {
+            //        using (ExcelPackage package = new ExcelPackage())
+            //        {
+            //            ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Employees");
 
-                        worksheet.Cells[1, 1].Value = "EmployeeID";
-                        worksheet.Cells[1, 2].Value = "Name";
-                        worksheet.Cells[1, 3].Value = "Position";
-                        worksheet.Cells[1, 4].Value = "Salary";
+            //            worksheet.Cells[1, 1].Value = "EmployeeID";
+            //            worksheet.Cells[1, 2].Value = "Name";
+            //            worksheet.Cells[1, 3].Value = "Position";
+            //            worksheet.Cells[1, 4].Value = "Salary";
 
-                        var employees = _context.Employees.ToList();
+            //            var employees = _context.Employees.ToList();
 
-                        int row = 2;
-                        foreach (var emp in employees)
-                        {
-                            worksheet.Cells[row, 1].Value = emp.EmployeeID;
-                            worksheet.Cells[row, 2].Value = emp.Name;
-                            worksheet.Cells[row, 3].Value = emp.Position;
-                            worksheet.Cells[row, 4].Value = emp.Salary;
-                            row++;
-                        }
+            //            int row = 2;
+            //            foreach (var emp in employees)
+            //            {
+            //                worksheet.Cells[row, 1].Value = emp.EmployeeID;
+            //                worksheet.Cells[row, 2].Value = emp.Name;
+            //                worksheet.Cells[row, 3].Value = emp.Position;
+            //                worksheet.Cells[row, 4].Value = emp.Salary;
+            //                row++;
+            //            }
 
-                        FileInfo file = new FileInfo(saveFileDialog.FileName);
-                        package.SaveAs(file);
+            //            FileInfo file = new FileInfo(saveFileDialog.FileName);
+            //            package.SaveAs(file);
 
-                        MessageBox.Show("Export successful! File saved.");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error exporting data: {ex.Message}");
-                }
-            }
+            //            MessageBox.Show("Export successful! File saved.");
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        MessageBox.Show($"Error exporting data: {ex.Message}");
+            //    }
+            //}
         }
 
         private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)

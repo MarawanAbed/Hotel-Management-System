@@ -1,3 +1,7 @@
+using BL.Services.Abstraction;
+using BL.Services.Implementation;
+using Dal.Entities;
+using Dal.Repo.Implementation;
 using HotelManagementSystem.database;
 using System.Security.Cryptography;
 using System.Text;
@@ -7,10 +11,16 @@ namespace HotelManagementSystem
 {
     public partial class LoginForm : Form
     {
+        private readonly IUserServices _userService;
+
         public LoginForm()
         {
             InitializeComponent();
             textBox2.PasswordChar = '*';
+            var context = new ApplicationDbContext();
+            var userRepository = new UserRepo(context);
+            _userService = new UserServices(userRepository);
+
         }
 
         private void button1_MouseHover(object sender, EventArgs e)
@@ -29,35 +39,21 @@ namespace HotelManagementSystem
             string username = textBox1.Text;
             string password = textBox2.Text;
 
-            string hashedPassword = HashPassword(password);
-
-            using (var context = new ApplicationDbContext())
+            User user = _userService.AuthenticateUser(username, password);
+            if (user != null)
             {
-                var user = context.Users
-                    .FirstOrDefault(u => u.Username == username && u.PasswordHash == hashedPassword);
-
-                if (user != null)
-                {
-                    MessageBox.Show("Login successful!");
-                    Dashboard dashboard = new Dashboard();
-                    dashboard.Show();
-                    this.Hide(); 
-                }
-                else
-                {
-                    MessageBox.Show("Invalid username or password.");
-                }
+                MessageBox.Show("Login successful!");
+                Dashboard dashboard = new Dashboard();
+                dashboard.Show();
+                this.Hide();
             }
-        }
-        private string HashPassword(string password)
-        {
-            using (var sha256 = SHA256.Create())
+            else
             {
-                var bytes = Encoding.UTF8.GetBytes(password);
-                var hash = sha256.ComputeHash(bytes);
-                return Convert.ToBase64String(hash);
+                MessageBox.Show("Invalid username or password.");
             }
+
         }
+
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
