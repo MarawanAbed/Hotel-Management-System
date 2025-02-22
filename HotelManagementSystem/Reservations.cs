@@ -59,35 +59,33 @@ namespace HotelManagementSystem
                 RoomID = Convert.ToInt32(comboBox1.SelectedValue),
                 CheckInDate = dateTimePicker1.Value,
                 CheckOutDate = dateTimePicker2.Value,
-                Status = ReservationStatus.Upcoming // Default status
+                Status = ReservationStatus.Upcoming
             };
 
             _context.Reservations.Add(newReservation);
 
-            // Mark the room as occupied
             var room = _context.Rooms.Find(newReservation.RoomID);
             if (room != null)
             {
-                room.Availability = false; // Room is now occupied
+                room.Availability = false;
             }
 
             _context.SaveChanges();
             MessageBox.Show("Reservation added successfully!");
 
-            // Refresh room list and reservations
             LoadAvailableRooms();
             LoadReservations();
         }
         private void LoadAvailableRooms()
         {
             var availableRooms = _context.Rooms
-                .Where(r => r.Availability) // Only fetch available rooms
+                .Where(r => r.Availability) 
                 .Select(r => new { r.RoomID, DisplayText = $"{r.RoomNumber} - {r.Type}" })
                 .ToList();
 
             comboBox1.DataSource = availableRooms;
-            comboBox1.DisplayMember = "DisplayText"; // Show Room Number and Type
-            comboBox1.ValueMember = "RoomID"; // Store RoomID
+            comboBox1.DisplayMember = "DisplayText"; 
+            comboBox1.ValueMember = "RoomID"; 
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -165,21 +163,18 @@ namespace HotelManagementSystem
 
                 if (reservation != null)
                 {
-                    // Mark the old room as available
                     var oldRoom = _context.Rooms.Find(reservation.RoomID);
                     if (oldRoom != null)
                     {
                         oldRoom.Availability = true;
                     }
 
-                    // Update reservation details
                     reservation.CustomerName = textBox1.Text;
                     reservation.RoomID = (int)comboBox1.SelectedValue;
                     reservation.CheckInDate = dateTimePicker1.Value;
                     reservation.CheckOutDate = dateTimePicker2.Value;
                     reservation.Status = (ReservationStatus)comboBox2.SelectedItem;
 
-                    // Mark the new room as unavailable
                     var newRoom = _context.Rooms.Find(reservation.RoomID);
                     if (newRoom != null)
                     {
@@ -187,7 +182,7 @@ namespace HotelManagementSystem
                     }
 
                     _context.SaveChanges();
-                    LoadReservations(); // Refresh the reservation list
+                    LoadReservations(); 
                 }
             }
         }
@@ -201,7 +196,6 @@ namespace HotelManagementSystem
 
                 if (reservation != null && reservation.Status == ReservationStatus.Upcoming)
                 {
-                    // Mark the room as available
                     var room = _context.Rooms.Find(reservation.RoomID);
                     if (room != null)
                     {
@@ -210,7 +204,7 @@ namespace HotelManagementSystem
 
                     _context.Reservations.Remove(reservation);
                     _context.SaveChanges();
-                    LoadReservations(); // Refresh the reservation list
+                    LoadReservations(); 
                 }
                 else
                 {

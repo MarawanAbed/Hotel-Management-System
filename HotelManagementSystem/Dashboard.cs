@@ -39,12 +39,12 @@ namespace HotelManagementSystem
 
         private void btnDashboard_Click(object sender, EventArgs e)
         {
-            LoadFormInPanel(new DashboardHomeForm()); // Load Dashboard content
+            LoadFormInPanel(new DashboardHomeForm()); 
 
         }
         private void LoadFormInPanel(Form form)
         {
-            panelMainContent.Controls.Clear(); // Clear previous form
+            panelMainContent.Controls.Clear(); 
             form.TopLevel = false;
             form.FormBorderStyle = FormBorderStyle.None;
             form.Dock = DockStyle.Fill;
@@ -54,17 +54,17 @@ namespace HotelManagementSystem
 
         private void btnEmployee_Click(object sender, EventArgs e)
         {
-            LoadFormInPanel(new EmployeeManagementHome()); // Load Employee Management content
+            LoadFormInPanel(new EmployeeManagementHome()); 
         }
 
         private void btnRooms_Click(object sender, EventArgs e)
         {
-            LoadFormInPanel(new RoomManagement()); // Load Room Management content
+            LoadFormInPanel(new RoomManagement());
         }
 
         private void btnReservations_Click(object sender, EventArgs e)
         {
-            LoadFormInPanel(new Reservations()); // Load Reservation Management content
+            LoadFormInPanel(new Reservations()); 
         }
 
         private void btnLogout_Click(object sender, EventArgs e)

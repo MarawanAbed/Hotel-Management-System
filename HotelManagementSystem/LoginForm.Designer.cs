@@ -121,6 +121,7 @@
             Name = "LoginForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Hotel Management System";
+            Load += LoginForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

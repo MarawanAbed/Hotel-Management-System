@@ -29,10 +29,8 @@ namespace HotelManagementSystem
             string username = textBox1.Text;
             string password = textBox2.Text;
 
-            // Hash the password
             string hashedPassword = HashPassword(password);
 
-            // Validate credentials using EF Core
             using (var context = new ApplicationDbContext())
             {
                 var user = context.Users
@@ -43,7 +41,7 @@ namespace HotelManagementSystem
                     MessageBox.Show("Login successful!");
                     Dashboard dashboard = new Dashboard();
                     dashboard.Show();
-                    this.Hide(); // Hide the login form
+                    this.Hide(); 
                 }
                 else
                 {
@@ -59,6 +57,11 @@ namespace HotelManagementSystem
                 var hash = sha256.ComputeHash(bytes);
                 return Convert.ToBase64String(hash);
             }
+        }
+
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

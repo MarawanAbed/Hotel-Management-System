@@ -25,7 +25,7 @@ namespace HotelManagementSystem
                     r.RoomNumber,
                     r.Type,
                     r.Price,
-                    Availability = r.Availability ? "Available" : "Occupied" // Display status clearly
+                    Availability = r.Availability ? "Available" : "Occupied" 
                 })
                 .ToList();
 
@@ -44,7 +44,7 @@ namespace HotelManagementSystem
                 RoomNumber = textBox1.Text,
                 Type = textBox3.Text,
                 Price = decimal.Parse(textBox2.Text),
-                Availability = true // Always start as available
+                Availability = true 
             };
 
             _context.Rooms.Add(room);
@@ -52,7 +52,7 @@ namespace HotelManagementSystem
             textBox1.Text = "";
             textBox2.Text = "";
             textBox3.Text = "";
-            LoadRooms(); // Refresh the room list
+            LoadRooms(); 
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -71,7 +71,7 @@ namespace HotelManagementSystem
                     textBox1.Text = "";
                     textBox2.Text = "";
                     textBox3.Text = "";
-                    LoadRooms(); // Refresh the room list
+                    LoadRooms(); 
                 }
             }
         }
@@ -85,7 +85,7 @@ namespace HotelManagementSystem
 
                 if (room != null)
                 {
-                    // Check for active reservations
+  
                     bool hasActiveReservations = _context.Reservations.Any(r =>
                         r.RoomID == id && (r.Status == ReservationStatus.Upcoming || r.Status == ReservationStatus.Ongoing));
 
@@ -97,7 +97,7 @@ namespace HotelManagementSystem
 
                     _context.Rooms.Remove(room);
                     _context.SaveChanges();
-                    LoadRooms(); // Refresh the room list
+                    LoadRooms();
                 }
             }
         }
@@ -162,7 +162,7 @@ namespace HotelManagementSystem
                         worksheet.Cells[row, 2].Value = room.RoomNumber;
                         worksheet.Cells[row, 3].Value = room.Type;
                         worksheet.Cells[row, 4].Value = room.Price;
-                        worksheet.Cells[row, 5].Value = room.Availability ? "Available" : "Occupied"; // Convert boolean to text
+                        worksheet.Cells[row, 5].Value = room.Availability ? "Available" : "Occupied";
                         row++;
                     }
 
@@ -204,7 +204,7 @@ namespace HotelManagementSystem
                 if (!string.IsNullOrEmpty(headerValue))
                 {
                     PropertyInfo property = properties.FirstOrDefault(p => p.Name.Equals(headerValue, StringComparison.OrdinalIgnoreCase));
-                    if (property != null && property.Name != "RoomID") // Ignore RoomID during import
+                    if (property != null && property.Name != "RoomID") 
                     {
                         columnMappings[col] = property;
                     }
@@ -213,7 +213,7 @@ namespace HotelManagementSystem
 
             for (int row = 2; row <= rowCount; row++)
             {
-                Room room = new Room(); // Do NOT set RoomID
+                Room room = new Room();
                 foreach (var columnMapping in columnMappings)
                 {
                     int colIndex = columnMapping.Key;
@@ -224,10 +224,10 @@ namespace HotelManagementSystem
                     {
                         try
                         {
-                            if (prop.Name == "Availability") // Handle Availability conversion
+                            if (prop.Name == "Availability") 
                             {
                                 string availabilityText = cellValue.ToString().Trim().ToLower();
-                                room.Availability = availabilityText == "available"; // Convert "Available" to true, "Occupied" to false
+                                room.Availability = availabilityText == "available";
                             }
                             else
                             {

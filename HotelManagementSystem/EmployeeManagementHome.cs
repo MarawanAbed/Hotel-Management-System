@@ -146,7 +146,6 @@ namespace HotelManagementSystem
                     {
                         ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Employees");
 
-                        // Write header row
                         worksheet.Cells[1, 1].Value = "EmployeeID";
                         worksheet.Cells[1, 2].Value = "Name";
                         worksheet.Cells[1, 3].Value = "Position";
@@ -222,21 +221,19 @@ namespace HotelManagementSystem
 
             Dictionary<int, PropertyInfo> columnMappings = new Dictionary<int, PropertyInfo>();
 
-            // Find matching columns
             for (int col = 1; col <= colCount; col++)
             {
                 string headerValue = worksheet.Cells[1, col].Value?.ToString()?.Trim();
                 if (!string.IsNullOrEmpty(headerValue))
                 {
                     PropertyInfo property = properties.FirstOrDefault(p => p.Name.Equals(headerValue, StringComparison.OrdinalIgnoreCase));
-                    if (property != null && property.Name != "EmployeeID") // Ignore Auto ID
+                    if (property != null && property.Name != "EmployeeID")
                     {
                         columnMappings[col] = property;
                     }
                 }
             }
 
-            // Read data rows
             for (int row = 2; row <= rowCount; row++)
             {
                 Employee emp = new Employee();
@@ -282,7 +279,7 @@ namespace HotelManagementSystem
 
                 if (headerCells.Contains("name") && headerCells.Contains("position") && headerCells.Contains("salary"))
                 {
-                    return worksheet; // Found a matching sheet
+                    return worksheet; 
                 }
             }
             return null;

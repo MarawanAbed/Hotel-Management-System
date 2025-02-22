@@ -21,25 +21,21 @@ namespace HotelManagementSystem.database
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configure the one-to-many relationship between Room and Reservation
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.Room)
                 .WithMany(room => room.Reservations)
                 .HasForeignKey(r => r.RoomID);
 
-            // Seed Users
             modelBuilder.Entity<User>().HasData(
                 new User { UserID = 1, Username = "admin", PasswordHash = HashPassword("admin123") }
             );
 
-            // Seed Employees
             modelBuilder.Entity<Employee>().HasData(
                 new Employee { EmployeeID = 1, Name = "John Doe", Position = "Manager", Salary = 5000 },
                 new Employee { EmployeeID = 2, Name = "Jane Smith", Position = "Receptionist", Salary = 3000 },
                 new Employee { EmployeeID = 3, Name = "Mike Johnson", Position = "Housekeeping", Salary = 2500 }
             );
 
-            // Seed Rooms
             modelBuilder.Entity<Room>().HasData(
                 new Room { RoomID = 1, RoomNumber = "101", Type = "Single", Price = 50, Availability = true },
                 new Room { RoomID = 2, RoomNumber = "102", Type = "Double", Price = 80, Availability = false },
@@ -47,7 +43,6 @@ namespace HotelManagementSystem.database
                 new Room { RoomID = 4, RoomNumber = "104", Type = "Single", Price = 55, Availability = true }
             );
 
-            // Seed Reservations
             modelBuilder.Entity<Reservation>().HasData(
                 new Reservation { ReservationID = 1, CustomerName = "Alice Johnson", CheckInDate = new DateTime(2025, 2, 20), CheckOutDate = new DateTime(2025, 2, 23), Status = ReservationStatus.Upcoming, RoomID = 2 },
                 new Reservation { ReservationID = 2, CustomerName = "Bob Williams", CheckInDate = new DateTime(2025, 2, 15), CheckOutDate = new DateTime(2025, 2, 20), Status = ReservationStatus.Ongoing, RoomID = 1 },
@@ -91,16 +86,15 @@ namespace HotelManagementSystem.database
         public decimal Price { get; set; }
         public bool Availability { get; set; } = true;
 
-        // Navigation property for Reservations
         public ICollection<Reservation> Reservations { get; set; }
     }
     public enum ReservationStatus
     {
-        Upcoming,   // Booking is confirmed but check-in hasn't happened yet
-        Ongoing,    // Guest has checked in
-        CheckedOut, // Guest has left, room should be available
-        Canceled,   // Reservation was canceled
-        NoShow      // Guest didn't show up
+        Upcoming,  
+        Ongoing,   
+        CheckedOut,
+        Canceled,  
+        NoShow     
     }
 
     public class Reservation
@@ -109,7 +103,7 @@ namespace HotelManagementSystem.database
         public string CustomerName { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
-        public ReservationStatus Status { get; set; }  // Updated type from string to enum
+        public ReservationStatus Status { get; set; } 
 
         public int RoomID { get; set; }
         public Room Room { get; set; }

@@ -27,16 +27,12 @@ namespace HotelManagementSystem
         {
             using (var db = new ApplicationDbContext()) // Connect to DB
             {
-                // Update label with total employees count
                 lblTotalEmployees.Text = "Total Employees: " + db.Employees.Count().ToString();
 
-                // Update label with available rooms count
                 lblAvailableRooms.Text = "Available Rooms: " + db.Rooms.Count(r => r.Availability).ToString();
 
-                // Update label with occupied rooms count
                 lblOccupiedRooms.Text = "Occupied Rooms: " + db.Rooms.Count(r => !r.Availability).ToString();
 
-                // Update label with upcoming reservations count
                 lblUpcomingReservations.Text = "Upcoming Reservations: " + db.Reservations.Count(r => r.CheckInDate > DateTime.Now).ToString();
 
                 dataGridViewRecentReservations.DataSource = db.Reservations
