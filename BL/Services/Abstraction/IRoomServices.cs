@@ -13,5 +13,7 @@ namespace BL.Services.Abstraction
         void AddRoom(Room room);
         void UpdateRoom(Room room);
         void DeleteRoom(int roomId);
+        Room GetRoomById(int roomId);
+        List<Room> GetAll();
     }
 }

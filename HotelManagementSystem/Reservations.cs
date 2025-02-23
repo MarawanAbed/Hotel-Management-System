@@ -3,9 +3,11 @@ using BL.Services.Implementation;
 using Dal.Entities;
 using Dal.Repo.Implementation;
 using HotelManagementSystem.database;
+using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 
 using System.Data;
+using System.Windows.Forms;
 
 
 namespace HotelManagementSystem
@@ -62,68 +64,201 @@ namespace HotelManagementSystem
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Excel Files|*.xlsx;*.xls" };
-            //if (openFileDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    string filePath = openFileDialog.FileName;
-            //    using (var package = new ExcelPackage(new FileInfo(filePath)))
-            //    {
-            //        var worksheet = package.Workbook.Worksheets.FirstOrDefault();
-            //        if (worksheet == null)
-            //        {
-            //            MessageBox.Show("No sheet found in the Excel file.");
-            //            return;
-            //        }
-            //        List<Reservation> reservations = ReadReservationSheet(worksheet);
-            //        _context.Reservations.AddRange(reservations);
-            //        _context.SaveChanges();
-            //        LoadReservations();
-            //    }
-            //}
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Excel Files|*.xlsx";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+                List<Reservation> reservation = readExcel<Reservation>(filePath);
+                dataGridView1.DataSource = reservation;
+                dataGridView1.Columns[0].Width = 100;
+                dataGridView1.Columns[1].Width = 300;
+                dataGridView1.Columns[2].Width = 300;
+                SaveReservationsToDatabase(reservation);
+                LoadDataFromDatabase();
+            }
+
+
+
         }
-        //private List<Reservation> ReadReservationSheet(ExcelWorksheet worksheet)
-        //{
-        //    List<Reservation> reservations = new List<Reservation>();
-        //    int rowCount = worksheet.Dimension.Rows;
-        //    for (int row = 2; row <= rowCount; row++)
-        //    {
-        //        reservations.Add(new Reservation
-        //        {
-        //            CustomerName = worksheet.Cells[row, 1].Value.ToString(),
-        //            RoomID = Convert.ToInt32(worksheet.Cells[row, 2].Value),
-        //            CheckInDate = DateTime.Parse(worksheet.Cells[row, 3].Value.ToString()),
-        //            CheckOutDate = DateTime.Parse(worksheet.Cells[row, 4].Value.ToString()),
-        //            Status = (ReservationStatus)Enum.Parse(typeof(ReservationStatus), worksheet.Cells[row, 5].Value.ToString())
-        //        });
-        //    }
-        //    return reservations;
-        //}
+        private void SaveReservationsToDatabase(List<Reservation> reservation)
+        {
+            try
+            {
+                foreach (var item in reservation)
+                {
+                    var existingReservation = _reservationService.GetReservationById(item.ReservationID);
+                    if (existingReservation == null)
+                    {
+                        // Insert new record
+                        _reservationService.AddReservation(new Reservation
+                        {
+                            CustomerName = item.CustomerName,
+                            RoomID = item.RoomID,
+                            CheckInDate = item.CheckInDate,
+                            CheckOutDate = item.CheckOutDate,
+                            Status = item.Status
+                        });
+                        
+                    }
+                    else
+                    {
+                        existingReservation.CustomerName = item.CustomerName;
+                        existingReservation.RoomID = item.RoomID;
+                        existingReservation.CheckInDate = item.CheckInDate;
+                        existingReservation.CheckOutDate = item.CheckOutDate;
+                        existingReservation.Status = item.Status;
+                        
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+       
+        private void writeExcel<T>(List<T> data, string path)
+        {
+            if (data == null || data.Count == 0)
+            {
+                MessageBox.Show("No data to export.");
+                return;
+            }
+
+            try
+            {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Report");
+                    var properties = typeof(T).GetProperties();
+
+                    for (int i = 0; i < properties.Length; i++)
+                    {
+                        worksheet.Cells[1, i + 1].Value = properties[i].Name;
+                        worksheet.Cells[1, i + 1].Style.Font.Bold = true; 
+                    }
+
+                    for (int row = 0; row < data.Count; row++)
+                    {
+                        for (int col = 0; col < properties.Length; col++)
+                        {
+                            worksheet.Cells[row + 2, col + 1].Value = properties[col].GetValue(data[row]);
+                        }
+                    }
+
+                    worksheet.Cells.AutoFitColumns(); 
+
+                    package.SaveAs(new FileInfo(path));
+                    MessageBox.Show("Export successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error exporting to Excel: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private List<T> readExcel<T>(string path) where T : new()
+        {
+            List<T> dataList = new List<T>();
+
+            using (var package = new ExcelPackage(new FileInfo(path)))
+            {
+                var worksheet = package.Workbook.Worksheets[0];
+                var properties = typeof(T).GetProperties();
+
+                for (int row = 2; row <= worksheet.Dimension.Rows; row++) 
+                {
+                    T item = new T();
+                    for (int col = 1; col <= worksheet.Dimension.Columns; col++)
+                    {
+                        string columnName = worksheet.Cells[1, col].Text;
+                        var property = properties.FirstOrDefault(p => p.Name.Equals(columnName, StringComparison.OrdinalIgnoreCase));
+
+                        if (property != null)
+                        {
+                            var cell = worksheet.Cells[row, col];
+
+                            if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
+                            {
+                                if (cell.Value != null && double.TryParse(cell.Value.ToString(), out double dateSerial))
+                                {
+                                    property.SetValue(item, DateTime.FromOADate(dateSerial));
+                                }
+                                else if (DateTime.TryParse(cell.Text, out DateTime parsedDate))
+                                {
+                                    property.SetValue(item, parsedDate);
+                                }
+                            }
+                            else if (property.PropertyType.IsEnum) 
+                            {
+                                try
+                                {
+                                    object enumValue = Enum.Parse(property.PropertyType, cell.Text, true);
+                                    property.SetValue(item, enumValue);
+                                }
+                                catch
+                                {
+                                    MessageBox.Show($"Invalid enum value: {cell.Text} for {property.Name}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                            }
+                            else if (property.PropertyType == typeof(Room)) 
+                            {
+                                int roomId;
+                                if (int.TryParse(cell.Text, out roomId))
+                                {
+                                   
+                                    var room = _reservationService.GetRoomById(roomId);
+                                    if (room != null)
+                                    {
+                                        property.SetValue(item, room);
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show($"Room with ID {roomId} not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                object convertedValue = Convert.ChangeType(cell.Text, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType);
+                                property.SetValue(item, convertedValue);
+                            }
+                        }
+                    }
+                    dataList.Add(item);
+                }
+            }
+            return dataList;
+        }
+
+
+
+        private void LoadDataFromDatabase()
+        {
+            var reservations = _reservationService.GetAllReservations();
+            dataGridView1.DataSource = reservations; 
+        }
+
+      
         private void button6_Click(object sender, EventArgs e)
         {
-            //SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = "Excel Files|*.xlsx" };
-            //if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    using (var package = new ExcelPackage())
-            //    {
-            //        var worksheet = package.Workbook.Worksheets.Add("Reservations");
-            //        worksheet.Cells[1, 1].Value = "CustomerName";
-            //        worksheet.Cells[1, 2].Value = "RoomID";
-            //        worksheet.Cells[1, 3].Value = "CheckInDate";
-            //        worksheet.Cells[1, 4].Value = "CheckOutDate";
-            //        worksheet.Cells[1, 5].Value = "Status";
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Excel Files|*.xlsx";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = saveFileDialog.FileName;
+                var data = _reservationService.GetAll();
+                writeExcel(data, filePath);
+            }
+         
+         
 
-            //        var reservations = _context.Reservations.ToList();
-            //        for (int i = 0; i < reservations.Count; i++)
-            //        {
-            //            worksheet.Cells[i + 2, 1].Value = reservations[i].CustomerName;
-            //            worksheet.Cells[i + 2, 2].Value = reservations[i].RoomID;
-            //            worksheet.Cells[i + 2, 3].Value = reservations[i].CheckInDate.ToShortDateString();
-            //            worksheet.Cells[i + 2, 4].Value = reservations[i].CheckOutDate.ToShortDateString();
-            //            worksheet.Cells[i + 2, 5].Value = reservations[i].Status.ToString();
-            //        }
-            //        package.SaveAs(new FileInfo(saveFileDialog.FileName));
-            //    }
-            //}
         }
 
         private void button2_Click(object sender, EventArgs e)

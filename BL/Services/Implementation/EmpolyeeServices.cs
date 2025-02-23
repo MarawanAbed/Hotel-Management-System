@@ -33,6 +33,11 @@ namespace BL.Services.Implementation
             return _empolyeeRepo.GetAllEmpolyees();
         }
 
+        public Employee GetEmployeeById(int employeeId)
+        {
+            return _empolyeeRepo.GetEmployeeById(employeeId);
+        }
+
         public void UpdateEmployee(Employee employee)
         {
             _empolyeeRepo.UpdateEmployee(employee);

@@ -36,6 +36,12 @@ namespace HotelManagementSystem
 
         private void button4_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(textBox1.Text) || string.IsNullOrWhiteSpace(textBox2.Text) ||string.IsNullOrWhiteSpace(textBox3.Text))
+            {
+                MessageBox.Show("Please fill all the fields", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             Room room = new Room
             {
                 RoomNumber = textBox1.Text,
@@ -82,78 +88,144 @@ namespace HotelManagementSystem
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            //OpenFileDialog openFileDialog = new OpenFileDialog
-            //{
-            //    Filter = "Excel Files|*.xlsx;*.xls"
-            //};
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Excel Files|*.xlsx";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+                List<Room> room = readExcel<Room>(filePath);
+                dataGridView1.DataSource = room;
+                dataGridView1.Columns[0].Width = 100;
+                dataGridView1.Columns[1].Width = 300;
+                dataGridView1.Columns[2].Width = 300;
+                SaveRoomsToDatabase(room);
+                LoadDataFromDatabase();
+            }
 
-            //if (openFileDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    string filePath = openFileDialog.FileName;
 
-            //    using (var package = new ExcelPackage(new FileInfo(filePath)))
-            //    {
-            //        var worksheet = package.Workbook.Worksheets.FirstOrDefault();
-            //        if (worksheet == null)
-            //        {
-            //            MessageBox.Show("No sheet found in the Excel file.");
-            //            return;
-            //        }
 
-            //        List<Room> rooms = ReadRoomSheet(worksheet);
-
-            //        if (rooms.Count > 0)
-            //        {
-            //            _context.Rooms.AddRange(rooms);
-            //            _context.SaveChanges();
-            //            LoadRooms();
-            //            MessageBox.Show("Import successful! Rooms saved to the database.");
-            //        }
-            //    }
-            //}
         }
-        //private void ExportRoomsToExcel()
-        //{
-        //    SaveFileDialog saveFileDialog = new SaveFileDialog
-        //    {
-        //        Filter = "Excel Files|*.xlsx",
-        //        FileName = "Rooms.xlsx"
-        //    };
+        private void SaveRoomsToDatabase(List<Room> room)
+        {
+            try
+            {
+                foreach (var item in room)
+                {
+                    var existingRoom = _services.GetRoomById(item.RoomID);
+                    if (existingRoom == null)
+                    {
+                        // Insert new record
+                        _services.AddRoom(new Room
+                        {
+                            RoomNumber = item.RoomNumber,
+                            Type = item.Type,
+                            Price = item.Price,
+                            Availability = item.Availability
 
-        //    if (saveFileDialog.ShowDialog() == DialogResult.OK)
-        //    {
-        //        using (var package = new ExcelPackage())
-        //        {
-        //            var worksheet = package.Workbook.Worksheets.Add("Rooms");
 
-        //            // Headers
-        //            worksheet.Cells[1, 1].Value = "RoomID";
-        //            worksheet.Cells[1, 2].Value = "RoomNumber";
-        //            worksheet.Cells[1, 3].Value = "Type";
-        //            worksheet.Cells[1, 4].Value = "Price";
-        //            worksheet.Cells[1, 5].Value = "Availability";
+                        });
 
-        //            var rooms = _context.Rooms.ToList();
-        //            int row = 2;
-        //            foreach (var room in rooms)
-        //            {
-        //                worksheet.Cells[row, 1].Value = room.RoomID;
-        //                worksheet.Cells[row, 2].Value = room.RoomNumber;
-        //                worksheet.Cells[row, 3].Value = room.Type;
-        //                worksheet.Cells[row, 4].Value = room.Price;
-        //                worksheet.Cells[row, 5].Value = room.Availability ? "Available" : "Occupied";
-        //                row++;
-        //            }
+                    }
+                    else
+                    {
+                        existingRoom.RoomNumber = item.RoomNumber;
+                        existingRoom.Type = item.Type;
+                        existingRoom.Price = item.Price;
+                        existingRoom.Availability = item.Availability;
+                       
 
-        //            FileInfo excelFile = new FileInfo(saveFileDialog.FileName);
-        //            package.SaveAs(excelFile);
-        //            MessageBox.Show("Rooms exported successfully.");
-        //        }
-        //    }
-        //}
+                        
+
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void writeExcel<T>(List<T> data, string path)
+        {
+            if (data == null || data.Count == 0)
+            {
+                MessageBox.Show("No data to export.");
+                return;
+            }
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Report");
+                var properties = typeof(T).GetProperties(); // Reflection: Get properties dynamically
+
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    worksheet.Cells[1, i + 1].Value = properties[i].Name;
+                }
+
+                for (int row = 0; row < data.Count; row++)
+                {
+                    for (int col = 0; col < properties.Length; col++)
+                    {
+                        worksheet.Cells[row + 2, col + 1].Value = properties[col].GetValue(data[row]); // Reflection: Get property values dynamically
+                    }
+                }
+
+                package.SaveAs(new FileInfo(path));
+            }
+        }
+        private List<T> readExcel<T>(string path) where T : new()
+        {
+            List<T> dataList = new List<T>();
+
+            using (var package = new ExcelPackage(new FileInfo(path)))
+            {
+                var worksheet = package.Workbook.Worksheets[0];
+                var properties = typeof(T).GetProperties();
+
+                for (int row = 2; row <= worksheet.Dimension.Rows; row++)
+                {
+                    T item = new T();
+                    for (int col = 1; col <= worksheet.Dimension.Columns; col++)
+                    {
+                        string columnName = worksheet.Cells[1, col].Text;
+                        var property = properties.FirstOrDefault(p => p.Name.Equals(columnName, StringComparison.OrdinalIgnoreCase));
+
+                        if (property != null)
+                        {
+                            var cellValue = worksheet.Cells[row, col].Text;
+                            if (!string.IsNullOrEmpty(cellValue))
+                            {
+                                object convertedValue = Convert.ChangeType(cellValue, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType);
+                                property.SetValue(item, convertedValue);
+                            }
+                        }
+                    }
+                    dataList.Add(item);
+                }
+
+            }
+            return dataList;
+        }
+        private void LoadDataFromDatabase()
+        {
+            var rooms =_services.GetAllRooms();
+            dataGridView1.DataSource = rooms;
+        }
+           
         private void button6_Click(object sender, EventArgs e)
         {
             //ExportRoomsToExcel();
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Excel Files|*.xlsx";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = saveFileDialog.FileName;
+                var data = _services.GetAll();
+                writeExcel(data, filePath);
+            }
+
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -167,64 +239,7 @@ namespace HotelManagementSystem
 
         }
 
-        //private List<Room> ReadRoomSheet(ExcelWorksheet worksheet)
-        //{
-        //    List<Room> rooms = new List<Room>();
-
-        //    int rowCount = worksheet.Dimension.Rows;
-        //    int colCount = worksheet.Dimension.Columns;
-        //    PropertyInfo[] properties = typeof(Room).GetProperties();
-
-        //    Dictionary<int, PropertyInfo> columnMappings = new Dictionary<int, PropertyInfo>();
-
-        //    for (int col = 1; col <= colCount; col++)
-        //    {
-        //        string headerValue = worksheet.Cells[1, col].Value?.ToString()?.Trim();
-        //        if (!string.IsNullOrEmpty(headerValue))
-        //        {
-        //            PropertyInfo property = properties.FirstOrDefault(p => p.Name.Equals(headerValue, StringComparison.OrdinalIgnoreCase));
-        //            if (property != null && property.Name != "RoomID") 
-        //            {
-        //                columnMappings[col] = property;
-        //            }
-        //        }
-        //    }
-
-        //    for (int row = 2; row <= rowCount; row++)
-        //    {
-        //        Room room = new Room();
-        //        foreach (var columnMapping in columnMappings)
-        //        {
-        //            int colIndex = columnMapping.Key;
-        //            PropertyInfo prop = columnMapping.Value;
-        //            object cellValue = worksheet.Cells[row, colIndex].Value;
-
-        //            if (cellValue != null)
-        //            {
-        //                try
-        //                {
-        //                    if (prop.Name == "Availability") 
-        //                    {
-        //                        string availabilityText = cellValue.ToString().Trim().ToLower();
-        //                        room.Availability = availabilityText == "available";
-        //                    }
-        //                    else
-        //                    {
-        //                        object convertedValue = Convert.ChangeType(cellValue, prop.PropertyType);
-        //                        prop.SetValue(room, convertedValue);
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    MessageBox.Show($"Error converting value '{cellValue}' for column '{prop.Name}': {ex.Message}");
-        //                }
-        //            }
-        //        }
-        //        rooms.Add(room);
-        //    }
-
-        //    return rooms;
-        //}
+        
         private void dataGridView1_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             textBox1.Text = dataGridView1.SelectedRows[0].Cells["RoomNumber"].Value.ToString();

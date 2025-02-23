@@ -14,5 +14,6 @@ namespace Dal.Repo.Abstraction
         void AddEmployee(Employee employee);
         void UpdateEmployee(Employee employee);
         void DeleteEmployee(int employeeId);
+        Employee GetEmployeeById(int employeeId);
     }
 }

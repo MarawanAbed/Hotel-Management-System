@@ -20,7 +20,7 @@ namespace Dal.Repo.Implementation
         }
         public void AddEmployee(Employee employee)
         {
-
+           
             _context.Employees.Add(employee);
             _context.SaveChanges();
         }
@@ -38,6 +38,11 @@ namespace Dal.Repo.Implementation
         public List<Employee> GetAllEmpolyees()
         {
             return _context.Employees.ToList();
+        }
+
+        public Employee GetEmployeeById(int employeeId)
+        {
+            return _context.Employees.FirstOrDefault(e => e.EmployeeID == employeeId);
         }
 
         public void UpdateEmployee(Employee employee)

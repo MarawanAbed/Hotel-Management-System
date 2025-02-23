@@ -9,6 +9,7 @@ namespace BL.Services.Abstraction
 {
     public interface IReservationServices
     {
+        public List<Reservation> GetAll();
         public List<Object> GetAllReservations();
         public List<Room> GetAvailableRooms();
         public Reservation GetReservationById(int id);
@@ -16,6 +17,7 @@ namespace BL.Services.Abstraction
         public void AddReservation(Reservation reservation);
         public void UpdateReservation(Reservation reservation);
         public void DeleteReservation(int id);
+        public void AddREservationRange(List<Reservation> ReservationList);
 
     }
 }

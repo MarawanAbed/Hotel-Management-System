@@ -47,6 +47,12 @@ namespace HotelManagementSystem
 
         private void button4_Click(object sender, EventArgs e)
         {
+            if(textBox1.Text == "" || textBox2.Text == "" || textBox3.Text == "")
+            {
+                MessageBox.Show("Please fill all the fields");
+                return;
+            }
+
             Employee employee = new Employee
             {
                 Name = textBox1.Text,
@@ -99,84 +105,147 @@ namespace HotelManagementSystem
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //OpenFileDialog openFileDialog = new OpenFileDialog
-            //{
-            //    Filter = "Excel Files|*.xlsx;*.xls"
-            //};
 
-            //if (openFileDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    string filePath = openFileDialog.FileName;
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Excel Files|*.xlsx";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+                List<Employee> employee = readExcel<Employee>(filePath);
+                dataGridView1.DataSource = employee;
+                dataGridView1.Columns[0].Width = 100;
+                dataGridView1.Columns[1].Width = 300;
+                dataGridView1.Columns[2].Width = 300;
+                SaveRoomsToDatabase(employee);
+                LoadDataFromDatabase();
+            }
 
-            //    using (var package = new ExcelPackage(new FileInfo(filePath)))
-            //    {
-            //        ExcelWorksheet worksheet = FindEmployeeSheet(package);
 
-            //        if (worksheet == null)
-            //        {
-            //            MessageBox.Show("No valid Employee sheet found!");
-            //            return;
-            //        }
 
-            //        List<Employee> employees = ReadEmployeeSheet(worksheet);
-
-            //        if (employees.Count > 0)
-            //        {
-            //            _context.Employees.AddRange(employees);
-            //            _context.SaveChanges();
-            //            LoadEmployees();
-            //            MessageBox.Show("Import successful! Employees saved to the database.");
-            //        }
-            //    }
-            //}
         }
+        private void SaveRoomsToDatabase(List<Employee> employee)
+        {
+            try
+            {
+                foreach (var item in employee)
+                {
+                    var existingEmployee = _empolyeeServices.GetEmployeeById(item.EmployeeID);
+                    if (existingEmployee == null)
+                    {
+                        // Insert new record
+                        _empolyeeServices.AddEmployee(new Employee
+                        {
+                            Name = item.Name,
+                            Position = item.Position,
+                            Salary = item.Salary
+
+
+
+                        });
+
+                    }
+                    else
+                    {
+                        existingEmployee.Name = item.Name;
+                        existingEmployee.Position = item.Position;
+                        existingEmployee.Salary = item.Salary;
+
+
+
+
+
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void writeExcel<T>(List<T> data, string path)
+        {
+            if (data == null || data.Count == 0)
+            {
+                MessageBox.Show("No data to export.");
+                return;
+            }
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Report");
+                var properties = typeof(T).GetProperties(); // Reflection: Get properties dynamically
+
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    worksheet.Cells[1, i + 1].Value = properties[i].Name;
+                }
+
+                for (int row = 0; row < data.Count; row++)
+                {
+                    for (int col = 0; col < properties.Length; col++)
+                    {
+                        worksheet.Cells[row + 2, col + 1].Value = properties[col].GetValue(data[row]); // Reflection: Get property values dynamically
+                    }
+                }
+
+                package.SaveAs(new FileInfo(path));
+            }
+        }
+        private List<T> readExcel<T>(string path) where T : new()
+        {
+            List<T> dataList = new List<T>();
+
+            using (var package = new ExcelPackage(new FileInfo(path)))
+            {
+                var worksheet = package.Workbook.Worksheets[0];
+                var properties = typeof(T).GetProperties();
+
+                for (int row = 2; row <= worksheet.Dimension.Rows; row++) // Skip header row
+                {
+                    T item = new T();
+                    for (int col = 1; col <= worksheet.Dimension.Columns; col++)
+                    {
+                        string columnName = worksheet.Cells[1, col].Text;
+                        var property = properties.FirstOrDefault(p => p.Name.Equals(columnName, StringComparison.OrdinalIgnoreCase));
+
+                        if (property != null)
+                        {
+                            var cellValue = worksheet.Cells[row, col].Text;
+                            if (!string.IsNullOrEmpty(cellValue))
+                            {
+                                object convertedValue = Convert.ChangeType(cellValue, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType);
+                                property.SetValue(item, convertedValue);
+                            }
+                        }
+                    }
+                    dataList.Add(item);
+                }
+
+            }
+            return dataList;
+        }
+        private void LoadDataFromDatabase()
+        {
+            var employees = _empolyeeServices.GetAllEmpolyees();
+            dataGridView1.DataSource = employees;
+        }
+            
 
 
 
         private void button6_Click(object sender, EventArgs e)
         {
-            //SaveFileDialog saveFileDialog = new SaveFileDialog
-            //{
-            //    Filter = "Excel Files|*.xlsx",
-            //    FileName = "Employees.xlsx"
-            //};
-
-            //if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    try
-            //    {
-            //        using (ExcelPackage package = new ExcelPackage())
-            //        {
-            //            ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Employees");
-
-            //            worksheet.Cells[1, 1].Value = "EmployeeID";
-            //            worksheet.Cells[1, 2].Value = "Name";
-            //            worksheet.Cells[1, 3].Value = "Position";
-            //            worksheet.Cells[1, 4].Value = "Salary";
-
-            //            var employees = _context.Employees.ToList();
-
-            //            int row = 2;
-            //            foreach (var emp in employees)
-            //            {
-            //                worksheet.Cells[row, 1].Value = emp.EmployeeID;
-            //                worksheet.Cells[row, 2].Value = emp.Name;
-            //                worksheet.Cells[row, 3].Value = emp.Position;
-            //                worksheet.Cells[row, 4].Value = emp.Salary;
-            //                row++;
-            //            }
-
-            //            FileInfo file = new FileInfo(saveFileDialog.FileName);
-            //            package.SaveAs(file);
-
-            //            MessageBox.Show("Export successful! File saved.");
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show($"Error exporting data: {ex.Message}");
-            //    }
-            //}
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Excel Files|*.xlsx";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = saveFileDialog.FileName;
+                var data = _empolyeeServices.GetAllEmpolyees();
+                writeExcel(data, filePath);
+            }
+            
         }
 
         private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
@@ -214,79 +283,7 @@ namespace HotelManagementSystem
             textBox3.Text = dataGridView1.SelectedRows[0].Cells["Salary"].Value.ToString();
         }
 
-        private List<Employee> ReadEmployeeSheet(ExcelWorksheet worksheet)
-        {
-            List<Employee> employees = new List<Employee>();
-
-            int rowCount = worksheet.Dimension.Rows;
-            int colCount = worksheet.Dimension.Columns;
-            PropertyInfo[] properties = typeof(Employee).GetProperties();
-
-            Dictionary<int, PropertyInfo> columnMappings = new Dictionary<int, PropertyInfo>();
-
-            for (int col = 1; col <= colCount; col++)
-            {
-                string headerValue = worksheet.Cells[1, col].Value?.ToString()?.Trim();
-                if (!string.IsNullOrEmpty(headerValue))
-                {
-                    PropertyInfo property = properties.FirstOrDefault(p => p.Name.Equals(headerValue, StringComparison.OrdinalIgnoreCase));
-                    if (property != null && property.Name != "EmployeeID")
-                    {
-                        columnMappings[col] = property;
-                    }
-                }
-            }
-
-            for (int row = 2; row <= rowCount; row++)
-            {
-                Employee emp = new Employee();
-                foreach (var columnMapping in columnMappings)
-                {
-                    int colIndex = columnMapping.Key;
-                    PropertyInfo prop = columnMapping.Value;
-                    object cellValue = worksheet.Cells[row, colIndex].Value;
-
-                    if (cellValue != null)
-                    {
-                        try
-                        {
-                            object convertedValue = Convert.ChangeType(cellValue, prop.PropertyType);
-                            prop.SetValue(emp, convertedValue);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show($"Error converting value '{cellValue}' for column '{prop.Name}': {ex.Message}");
-                        }
-                    }
-                }
-                employees.Add(emp);
-            }
-
-            return employees;
-        }
-        private ExcelWorksheet FindEmployeeSheet(ExcelPackage package)
-        {
-            foreach (var worksheet in package.Workbook.Worksheets)
-            {
-                var headerCells = new List<string>();
-                int colCount = worksheet.Dimension?.Columns ?? 0;
-
-                for (int col = 1; col <= colCount; col++)
-                {
-                    string header = worksheet.Cells[1, col].Value?.ToString()?.Trim();
-                    if (!string.IsNullOrEmpty(header))
-                    {
-                        headerCells.Add(header.ToLower());
-                    }
-                }
-
-                if (headerCells.Contains("name") && headerCells.Contains("position") && headerCells.Contains("salary"))
-                {
-                    return worksheet; 
-                }
-            }
-            return null;
-        }
+        
 
     }
 }

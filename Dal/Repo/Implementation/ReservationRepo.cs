@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dal.Repo.Implementation
 {
+
+
     public class ReservationRepo : IReservationRepo
     {
         private readonly ApplicationDbContext _context;
@@ -23,6 +25,12 @@ namespace Dal.Repo.Implementation
             _context.SaveChanges();
         }
 
+        public void AddREservationRange(List<Reservation> ReservationList)
+        {
+             _context.Reservations.AddRange(ReservationList);
+            _context.SaveChanges();
+        }
+
         public void DeleteReservation(int id)
         {
             var reservation = _context.Reservations.Find(id);
@@ -37,6 +45,11 @@ namespace Dal.Repo.Implementation
                 _context.Reservations.Remove(reservation);
                 _context.SaveChanges();
             }
+        }
+
+        public List<Reservation> GetAll()
+        {
+            return _context.Reservations.ToList();
         }
 
         public List<Reservation> GetAllReservations()

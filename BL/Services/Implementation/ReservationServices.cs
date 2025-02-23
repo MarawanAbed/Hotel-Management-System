@@ -31,16 +31,26 @@ namespace BL.Services.Implementation
             _reservationRepo.AddReservation(newReservation);
         }
 
+        public void AddREservationRange(List<Reservation> ReservationList)
+        {
+             _reservationRepo.AddREservationRange(ReservationList);
+        }
+
         public void DeleteReservation(int id)
         {
             _reservationRepo.DeleteReservation(id);
+        }
+
+        public List<Reservation> GetAll()
+        {
+            return _reservationRepo.GetAll();
         }
 
         public List<Object> GetAllReservations()
         {
 
             var reservations = _reservationRepo.GetAllReservations();
-            return reservations.Select(r => new
+            return reservations.Select(r => new 
             {
                 r.ReservationID,
                 r.CustomerName,

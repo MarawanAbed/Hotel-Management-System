@@ -29,6 +29,11 @@ namespace BL.Services.Implementation
             _room.DeleteRoom(roomId);
         }
 
+        public List<Room> GetAll()
+        {
+           return _room.GetAll();
+        }
+
         public List<object> GetAllRooms()
         {
             
@@ -42,6 +47,11 @@ namespace BL.Services.Implementation
                     Availability = r.Availability ? "Available" : "Occupied"
                 }).ToList<object>();
             
+        }
+
+        public Room GetRoomById(int roomId)
+        {
+            return _room.GetRoomById(roomId);
         }
 
         public void UpdateRoom(Room room)

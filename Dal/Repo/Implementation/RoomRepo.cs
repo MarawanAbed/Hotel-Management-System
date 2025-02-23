@@ -34,9 +34,19 @@ namespace Dal.Repo.Implementation
             }
         }
 
+        public List<Room> GetAll()
+        {
+           return _context.Rooms.ToList();
+        }
+
         public List<Room> GetAllRooms()
         {
             return _context.Rooms.ToList();
+        }
+
+        public Room GetRoomById(int roomId)
+        {
+            return _context.Rooms.FirstOrDefault(e => e.RoomID == roomId);
         }
 
         public void UpdateRoom(Room room)

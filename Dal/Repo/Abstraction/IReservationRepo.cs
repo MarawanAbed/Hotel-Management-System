@@ -9,6 +9,7 @@ namespace Dal.Repo.Abstraction
 {
     public interface IReservationRepo
     {
+        public List<Reservation> GetAll();
         public List<Reservation> GetAllReservations();
         public List<Room> GetAvailableRooms();
         public Reservation GetReservationById(int id);
@@ -16,5 +17,6 @@ namespace Dal.Repo.Abstraction
         public void AddReservation(Reservation reservation);
         public void UpdateReservation(Reservation reservation);
         public void DeleteReservation(int id);
+        public void AddREservationRange(List<Reservation> ReservationList);
     }
 }
