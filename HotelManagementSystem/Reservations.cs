@@ -31,7 +31,7 @@ namespace HotelManagementSystem
         {
             dataGridView1.DataSource = _reservationService.GetAllReservations();
         }
-
+        //load rooms
         private void LoadRooms()
         {
             comboBox1.DataSource = _reservationService.GetAvailableRooms();
