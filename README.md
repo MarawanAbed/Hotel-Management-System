@@ -1,4 +1,5 @@
 Hotel Management System 🏨
+
 The Hotel Management System is a comprehensive Windows Forms application designed to manage hotel operations efficiently. It provides features for managing rooms, reservations, and employees, along with advanced functionalities like Excel import/export using reflection, password hashing for secure authentication, and a dashboard for real-time insights.
 
 This project was developed using 3-Tier Architecture to ensure separation of concerns, scalability, and maintainability. It also includes a secure admin login system and dynamic Excel import/export capabilities.
