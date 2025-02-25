@@ -1,9 +1,9 @@
-Overview
+Hotel Management System 🏨
 The Hotel Management System is a comprehensive Windows Forms application designed to manage hotel operations efficiently. It provides features for managing rooms, reservations, and employees, along with advanced functionalities like Excel import/export using reflection, password hashing for secure authentication, and a dashboard for real-time insights.
 
-This project was developed using 3-Tier Architecture to ensure separation of concerns, scalability, and maintainability. I would also like to thank my team members and instructor for their guidance and support throughout the development process.
+This project was developed using 3-Tier Architecture to ensure separation of concerns, scalability, and maintainability. It also includes a secure admin login system and dynamic Excel import/export capabilities.
 
-Key Features
+Key Features ✨
 1. Dashboard
 Real-Time Insights: Display key metrics such as:
 
@@ -53,27 +53,24 @@ SQLite Database: Lightweight and easy-to-use database for local storage.
 
 One-to-Many Relationship: Rooms and reservations are linked, ensuring data consistency.
 
-3-Tier Architecture
+3-Tier Architecture 🏗️
 The application is built using 3-Tier Architecture, which separates the application into three logical layers:
 
-Presentation Layer (UI):
-
+1. Presentation Layer (UI)
 Handles user interaction and displays data.
 
 Built using Windows Forms.
 
 Communicates with the Business Logic Layer to fetch and update data.
 
-Business Logic Layer (BLL):
-
+2. Business Logic Layer (BLL)
 Contains the core logic of the application.
 
 Validates data, enforces business rules, and processes requests from the Presentation Layer.
 
 Communicates with the Data Access Layer to retrieve and store data.
 
-Data Access Layer (DAL):
-
+3. Data Access Layer (DAL)
 Manages interactions with the database.
 
 Built using Entity Framework Core.
@@ -82,7 +79,7 @@ Handles CRUD operations for entities like rooms, reservations, and employees.
 
 This architecture ensures separation of concerns, making the application scalable, maintainable, and easy to test.
 
-Technologies Used
+Technologies Used 🛠️
 C#: Primary programming language.
 
 Windows Forms: For building the user interface (Presentation Layer).
@@ -97,7 +94,7 @@ Reflection: For dynamic handling of Excel import/export.
 
 SHA-256: For secure password hashing.
 
-Advanced Features
+Advanced Features 🚀
 1. Dashboard
 The dashboard provides real-time insights into hotel operations, including:
 
@@ -120,3 +117,17 @@ Example: When importing rooms from an Excel file, the system dynamically maps Ex
 Passwords are hashed using SHA-256 before storing in the database, ensuring secure authentication.
 
 Example: When a user registers, their password is hashed and stored. During login, the entered password is hashed and compared to the stored hash.
+
+How to Use 🛠️
+Login: Use the default admin credentials (admin / admin123) or register a new user.
+
+Dashboard: View real-time insights into hotel operations.
+
+Manage Rooms: Add, update, or delete rooms. Ensure rooms with active reservations cannot be deleted.
+
+Manage Reservations: Add, update, or delete reservations. Ensure only available rooms can be selected.
+
+Manage Employees: Add, update, or delete employees.
+
+Import/Export Data: Use the import/export functionality to manage data in Excel files.
+
